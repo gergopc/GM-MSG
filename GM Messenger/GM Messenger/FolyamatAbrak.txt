@@ -1,0 +1,12 @@
+﻿Apikey:
+
+ha my.settings.apikey üres, generateApikey()
+
+my.settings.apikey = generateApikey()
+
++szám generateApikey:
+
+random 8 szamjegyu kod generálása
+
+bef.
+
