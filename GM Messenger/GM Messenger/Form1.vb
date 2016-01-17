@@ -4,6 +4,10 @@ Imports MySql.Data.MySqlClient
 Public Class Main
 
     Dim db_serverstring As String = "Server=" + My.Settings.db_host + ";User Id=" + My.Settings.db_user + ";Password=" + My.Settings.db_pwd + ";Database=" + My.Settings.db_db
+    Dim dbCon As MySqlConnection
+    Dim sqlCmd As MySqlCommand
+    Dim DR As MySqlDataReader
+    Dim strQuery As String
 
     Private Sub SendEnter(sender As Object, e As KeyEventArgs) Handles SendBox.KeyDown
         If e.KeyCode = Keys.Enter Then
@@ -17,7 +21,9 @@ Public Class Main
         End If
 
         If Authorized() = False Then
-            Dim mastercode As String = InputBox("Please type the master code!")
+            Dim mastercode As String = InputBox("Please type the master code!", "Enter mastercode")
+
+
             If Not CheckMasterCode(mastercode) = True Then
                 MessageBox.Show("You aren't permitted to use this messenger!", "You aren't permitted", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Close()
@@ -35,7 +41,36 @@ Public Class Main
     Private Function CheckMasterCode(mastercode As String) As Boolean
         If mastercode = "apk123" Then
             MessageBox.Show(My.Settings.apikey)
+        ElseIf mastercode = "gk456" Then
+            MessageBox.Show(getMasterCode)
+        ElseIf mastercode = Nothing Then
+            Return False
+            Stop
+        ElseIf mastercode = getMasterCode() And mastercode IsNot Nothing Then
+            Return True
+        Else
+            Return False
+
         End If
+    End Function
+
+    Private Function getMasterCode() As String
+        Try
+            dbCon = New MySqlConnection(db_serverstring)
+            strQuery = "SELECT users.code" &
+                "FROM master"
+            sqlCmd = New MySqlCommand(strQuery, dbCon)
+            dbCon.Open()
+            DR = sqlCmd.ExecuteReader()
+
+            While DR.Read
+                Return DR.Item("code")
+            End While
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
     End Function
 
     Private Function Authorized() As Boolean
