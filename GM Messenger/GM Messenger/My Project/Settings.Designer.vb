@@ -65,6 +65,54 @@ Namespace My
                 Me("apikey") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("sql4.freemysqlhosting.net")>  _
+        Public Property db_host() As String
+            Get
+                Return CType(Me("db_host"),String)
+            End Get
+            Set
+                Me("db_host") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("sql4103243")>  _
+        Public Property db_user() As String
+            Get
+                Return CType(Me("db_user"),String)
+            End Get
+            Set
+                Me("db_user") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("FAu1za7XC9")>  _
+        Public Property db_pwd() As String
+            Get
+                Return CType(Me("db_pwd"),String)
+            End Get
+            Set
+                Me("db_pwd") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("sql4103243")>  _
+        Public Property db_db() As String
+            Get
+                Return CType(Me("db_db"),String)
+            End Get
+            Set
+                Me("db_db") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

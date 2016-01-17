@@ -1,6 +1,10 @@
 ﻿Imports System.Text
+Imports MySql.Data.MySqlClient
 
 Public Class Main
+
+    Dim db_serverstring As String = "Server=" + My.Settings.db_host + ";User Id=" + My.Settings.db_user + ";Password=" + My.Settings.db_pwd + ";Database=" + My.Settings.db_db
+
     Private Sub SendEnter(sender As Object, e As KeyEventArgs) Handles SendBox.KeyDown
         If e.KeyCode = Keys.Enter Then
             sendBTN.PerformClick()

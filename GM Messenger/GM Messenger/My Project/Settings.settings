@@ -5,5 +5,17 @@
     <Setting Name="apikey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="db_host" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sql4.freemysqlhosting.net</Value>
+    </Setting>
+    <Setting Name="db_user" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sql4103243</Value>
+    </Setting>
+    <Setting Name="db_pwd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FAu1za7XC9</Value>
+    </Setting>
+    <Setting Name="db_db" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sql4103243</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
