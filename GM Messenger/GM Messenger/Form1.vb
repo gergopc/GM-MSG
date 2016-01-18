@@ -3,6 +3,13 @@ Imports MySql.Data.MySqlClient
 
 Public Class Main
 
+
+    Dim Credentials(2) As String
+
+    Dim dbCon As MySqlConnection
+    Dim sqlCmd As MySqlCommand
+    Dim DR As MySqlDataReader
+    Dim strQuery As String
     Dim db_serverstring As String = getSQLStr()
 
     Private Function getSQLStr() As String
@@ -16,15 +23,61 @@ Public Class Main
         End Try
     End Function
 
-    Private Sub ShowError(message As String, Optional Byval title As String = "Error")
+    Private Sub getCredentials()
+        Try
+            dbCon = New MySqlConnection(db_serverstring)
+            strQuery = "SELECT username
+FROM `sql4103243`.`users` WHERE apikey='" + My.Settings.apikey + "';"
+            sqlCmd = New MySqlCommand(strQuery, dbCon)
+            dbCon.Open()
+            DR = sqlCmd.ExecuteReader()
+
+            While DR.Read
+                Credentials(0) = DR.Item("username")
+            End While
+
+
+        Catch ex As Exception
+            ShowError("Error getting username: " + ex.Message)
+        End Try
+        Try
+            dbCon = New MySqlConnection(db_serverstring)
+            strQuery = "SELECT password
+FROM `sql4103243`.`users` WHERE apikey='" + My.Settings.apikey + "';"
+            sqlCmd = New MySqlCommand(strQuery, dbCon)
+            dbCon.Open()
+            DR = sqlCmd.ExecuteReader()
+
+            While DR.Read
+                Credentials(1) = DR.Item("password")
+            End While
+
+
+        Catch ex As Exception
+            ShowError("Error getting password: " + ex.Message)
+        End Try
+        Try
+            dbCon = New MySqlConnection(db_serverstring)
+            strQuery = "SELECT becenev
+FROM `sql4103243`.`users` WHERE apikey='" + My.Settings.apikey + "';"
+            sqlCmd = New MySqlCommand(strQuery, dbCon)
+            dbCon.Open()
+            DR = sqlCmd.ExecuteReader()
+
+            While DR.Read
+                Credentials(2) = DR.Item("becenev")
+            End While
+
+
+        Catch ex As Exception
+            ShowError("Error getting alternative name: " + ex.Message)
+        End Try
+    End Sub
+
+    Private Sub ShowError(message As String, Optional ByVal title As String = "Error")
 
         MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Sub
-
-    Dim dbCon As MySqlConnection
-    Dim sqlCmd As MySqlCommand
-    Dim DR As MySqlDataReader
-    Dim strQuery As String
 
     Private Sub SendEnter(sender As Object, e As KeyEventArgs) Handles SendBox.KeyDown
         If e.KeyCode = Keys.Enter Then
@@ -33,7 +86,7 @@ Public Class Main
     End Sub
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        getCredentials()
 
         If My.Settings.apikey = Nothing Then
             My.Settings.apikey = generateApikey()
@@ -56,19 +109,37 @@ Public Class Main
     End Sub
 
     Private Sub Login()
-
+        Dim result As DialogResult = LoginForm1.ShowDialog()
+        If result = DialogResult.OK Then
+            If Not My.Settings.username = Credentials(0) And Not My.Settings.password = Credentials(1) Then
+                Close()
+            End If
+        Else
+                Close()
+        End If
     End Sub
 
     Private Sub Authorize()
+
+        Try
+            dbCon = New MySqlConnection(db_serverstring)
+            strQuery = "INSERT INTO `sql4103243`.`users` (`apikey`) VALUES ('" + My.Settings.apikey + "');"
+            sqlCmd = New MySqlCommand(strQuery, dbCon)
+            dbCon.Open()
+            sqlCmd.ExecuteNonQuery()
+            dbCon.Close()
+
+        Catch ex As Exception
+            ShowError(ex.Message)
+        End Try
+
         Register.ShowDialog()
     End Sub
 
     Private Function CheckMasterCode(mastercode As String) As Boolean
-        If mastercode = "apk123" Then
-            MessageBox.Show(My.Settings.apikey)
-        ElseIf mastercode = "gk456" Then
-            MessageBox.Show(getMasterCode)
-        ElseIf mastercode = Nothing Then
+
+
+        If mastercode = Nothing Then
             Return False
             Stop
         ElseIf mastercode = getMasterCode() And mastercode IsNot Nothing Then
@@ -97,9 +168,23 @@ FROM `sql4103243`.`master`;"
         End Try
 
     End Function
-
     Private Function Authorized() As Boolean
+        Try
+            dbCon = New MySqlConnection(db_serverstring)
+            strQuery = "SELECT username
+FROM `sql4103243`.`users` WHERE apikey='" + My.Settings.apikey + "';"
+            sqlCmd = New MySqlCommand(strQuery, dbCon)
+            dbCon.Open()
+            DR = sqlCmd.ExecuteReader()
 
+            If DR.HasRows Then
+                Return True
+            Else Return False
+            End If
+
+        Catch ex As Exception
+            ShowError(ex.Message)
+        End Try
     End Function
 
     Private Function generateApikey() As String
@@ -118,5 +203,12 @@ FROM `sql4103243`.`master`;"
 
     Private Sub sendBTN_Click(sender As Object, e As EventArgs) Handles sendBTN.Click
         SendBox.Clear()
+    End Sub
+
+    Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        My.Settings.username = Nothing
+        My.Settings.password = Nothing
+        My.Settings.alternative_name = Nothing
+
     End Sub
 End Class
