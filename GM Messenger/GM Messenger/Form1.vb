@@ -208,7 +208,6 @@ FROM `sql4103243`.`users` WHERE apikey='" + My.Settings.apikey + "';"
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         My.Settings.username = Nothing
         My.Settings.password = Nothing
-        My.Settings.alternative_name = Nothing
 
     End Sub
 End Class

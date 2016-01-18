@@ -89,18 +89,6 @@ Namespace My
                 Me("password") = value
             End Set
         End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property alternative_name() As String
-            Get
-                Return CType(Me("alternative_name"),String)
-            End Get
-            Set
-                Me("alternative_name") = value
-            End Set
-        End Property
     End Class
 End Namespace
 
