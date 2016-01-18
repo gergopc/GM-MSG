@@ -60,7 +60,7 @@ Public Class Main
     End Sub
 
     Private Sub Authorize()
-
+        Register.ShowDialog()
     End Sub
 
     Private Function CheckMasterCode(mastercode As String) As Boolean
