@@ -3,7 +3,24 @@ Imports MySql.Data.MySqlClient
 
 Public Class Main
 
-    Dim db_serverstring As String = "Server=" + My.Settings.db_host + ";User Id=" + My.Settings.db_user + ";Password=" + My.Settings.db_pwd + ";Database=" + My.Settings.db_db
+    Dim db_serverstring As String = getSQLStr()
+
+    Private Function getSQLStr() As String
+        Try
+            Dim reader As IO.StreamReader = New IO.StreamReader("GMC.xyz")
+
+            Return reader.ReadToEnd()
+
+        Catch ex As Exception
+            ShowError(ex.Message)
+        End Try
+    End Function
+
+    Private Sub ShowError(message As String, Optional Byval title As String = "Error")
+
+        MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error)
+    End Sub
+
     Dim dbCon As MySqlConnection
     Dim sqlCmd As MySqlCommand
     Dim DR As MySqlDataReader
@@ -16,6 +33,8 @@ Public Class Main
     End Sub
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+
         If My.Settings.apikey = Nothing Then
             My.Settings.apikey = generateApikey()
         End If
@@ -25,12 +44,18 @@ Public Class Main
 
 
             If Not CheckMasterCode(mastercode) = True Then
-                MessageBox.Show("You aren't permitted to use this messenger!", "You aren't permitted", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                ShowError("You aren't permitted to use this messenger!", "You aren't permitted")
                 Close()
             Else
                 Authorize()
             End If
+        Else
+            Login()
         End If
+
+    End Sub
+
+    Private Sub Login()
 
     End Sub
 
@@ -57,8 +82,8 @@ Public Class Main
     Private Function getMasterCode() As String
         Try
             dbCon = New MySqlConnection(db_serverstring)
-            strQuery = "SELECT users.code" &
-                "FROM master"
+            strQuery = "SELECT code
+FROM `sql4103243`.`master`;"
             sqlCmd = New MySqlCommand(strQuery, dbCon)
             dbCon.Open()
             DR = sqlCmd.ExecuteReader()
@@ -68,7 +93,7 @@ Public Class Main
             End While
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ShowError(ex.Message)
         End Try
 
     End Function
@@ -90,4 +115,8 @@ Public Class Main
 
 
     End Function
+
+    Private Sub sendBTN_Click(sender As Object, e As EventArgs) Handles sendBTN.Click
+        SendBox.Clear()
+    End Sub
 End Class
