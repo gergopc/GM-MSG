@@ -86,7 +86,7 @@ FROM `sql4103243`.`users` WHERE apikey='" + My.Settings.apikey + "';"
     End Sub
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        getCredentials()
+
 
         If My.Settings.apikey = Nothing Then
             My.Settings.apikey = generateApikey()
@@ -103,6 +103,7 @@ FROM `sql4103243`.`users` WHERE apikey='" + My.Settings.apikey + "';"
                 Authorize()
             End If
         Else
+            getCredentials()
             Login()
         End If
 
